@@ -7,6 +7,8 @@ import androidx.room.Room;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -145,4 +147,78 @@ public class AnalyticsDataHelper {
             }
         }).start();
     }
+
+    //new from here
+
+    public void getAllDataAsString(CallBack_AnalyticsString callBack_analyticsString) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<Analytics> analytics = appDatabase.analyticsDao().getAll();
+                StringBuilder stringBuilder = new StringBuilder();
+                for (Analytics analytic : analytics) {
+                    stringBuilder.append(analytic.toString()).append("\n");
+                }
+                if (callBack_analyticsString != null) {
+                    callBack_analyticsString.dataReady(stringBuilder.toString());
+                }
+            }
+        }).start();
+    }
+
+    public interface CallBack_AnalyticsString {
+        void dataReady(String analyticsData);
+    }
+
+    public void downloadAnalyticsData(Context context, CallBack_FileDownload callBack_fileDownload) {
+        getAllDataAsString(new CallBack_AnalyticsString() {
+            @Override
+            public void dataReady(String analyticsData) {
+                try {
+                    File file = FileHelper.writeToFile(context, "analytics_data.txt", analyticsData);
+                    if (callBack_fileDownload != null) {
+                        callBack_fileDownload.onFileDownloaded(file);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    if (callBack_fileDownload != null) {
+                        callBack_fileDownload.onError(e);
+                    }
+                }
+            }
+        });
+    }
+
+    public void downloadAnalyticsDataForActivity(Context context, String activityName, CallBack_FileDownload callBack_fileDownload) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<Analytics> analytics = appDatabase.analyticsDao().getAllByActivityName(activityName);
+                StringBuilder stringBuilder = new StringBuilder();
+                for (Analytics analytic : analytics) {
+                    stringBuilder.append(analytic.toString()).append("\n");
+                }
+                String analyticsData = stringBuilder.toString();
+
+                try {
+                    File file = FileHelper.writeToFile(context, "analytics_" + activityName + ".txt", analyticsData);
+                    //File file = FileHelper.writeToFile(context, "analytics_data.txt", analyticsData);
+                    if (callBack_fileDownload != null) {
+                        callBack_fileDownload.onFileDownloaded(file);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    if (callBack_fileDownload != null) {
+                        callBack_fileDownload.onError(e);
+                    }
+                }
+            }
+        }).start();
+    }
+
+    public interface CallBack_FileDownload {
+        void onFileDownloaded(File file);
+        void onError(Exception e);
+    }
+
 }

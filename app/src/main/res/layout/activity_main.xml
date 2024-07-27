@@ -14,4 +14,13 @@
         android:layout_centerInParent="true"
         android:text="next_activity" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/main_BTN_download"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main_BTN_next"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="Download Analytics Data" />
+
 </RelativeLayout>
