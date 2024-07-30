@@ -247,6 +247,10 @@ Get all analytics by activity date:
         });
 ```
 
+### Video Example:
+https://github.com/user-attachments/assets/3defb2b4-8bc6-46c8-a8f3-23070c07a2df
+
+
 ### License:
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
