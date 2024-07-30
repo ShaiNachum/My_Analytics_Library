@@ -37,6 +37,14 @@ public class MainActivity extends AppCompatActivity {
         findViews();
         initViews();
 
+//        AnalyticsDataHelper.getInstance().getAverageTimeSpentInActivity("MainActivity", new AnalyticsDataHelper.CallBack_AverageTime() {
+//            @Override
+//            public void onAverageTimeCalculated(double averageTimeInSeconds) {
+//                // Use the average time here
+//                Log.d("shai", "Average time spent in YourActivityName: " + averageTimeInSeconds + " seconds");
+//            }
+//        });
+
 
 //        AnalyticsDataHelper.getInstance().getAllActivityBiggerThanTimePeriod(1, new AnalyticsDataHelper.CallBack_Analytics() {
 //            @Override

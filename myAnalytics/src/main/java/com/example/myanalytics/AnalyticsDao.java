@@ -32,10 +32,12 @@ public interface AnalyticsDao {
     @Query("SELECT * FROM analytics_data where date LIKE :date")
     List<Analytics> getAllByActivityDate(String date);
 
-
     @Query("SELECT * FROM analytics_data where  time_period > :time_period")
     List<Analytics> getAllActivityBiggerThanTimePeriod(long time_period);
 
     @Query("DELETE FROM analytics_data WHERE 1")
     void deleteAll();
+
+    @Query("SELECT AVG(time_period) FROM analytics_data WHERE activity_name = :activityName AND tag = 'onActivityStopped'")
+    double getAverageTimeSpentInActivity(String activityName);
 }

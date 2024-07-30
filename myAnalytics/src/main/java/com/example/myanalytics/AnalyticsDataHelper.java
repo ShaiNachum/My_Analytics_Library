@@ -221,4 +221,20 @@ public class AnalyticsDataHelper {
         void onError(Exception e);
     }
 
+    public void getAverageTimeSpentInActivity(String activityName, CallBack_AverageTime callBack_averageTime) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                double averageTime = appDatabase.analyticsDao().getAverageTimeSpentInActivity(activityName);
+                if (callBack_averageTime != null) {
+                    callBack_averageTime.onAverageTimeCalculated(averageTime);
+                }
+            }
+        }).start();
+    }
+
+    public interface CallBack_AverageTime {
+        void onAverageTimeCalculated(double averageTimeInSeconds);
+    }
+
 }
